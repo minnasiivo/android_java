@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">AppNbrOne</string>
+    <string name="button">HI THERE!</string>
+    <string name="my_textView">Hello World!</string>
+    <string name="play_button">PLAY</string>
+    <string name="title_activity_bottom_navigation">BottomNavigation</string>
+    <string name="title_home">Game</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="Game_header">Let\'s Play</string>
+</resources>
