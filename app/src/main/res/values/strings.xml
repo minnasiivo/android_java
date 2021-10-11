@@ -8,4 +8,7 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="Game_header">Let\'s Play</string>
+    <string name="score">High score</string>
+    <string name="myscore">Score</string>
+    <string name="gameTextView">Try again</string>
 </resources>

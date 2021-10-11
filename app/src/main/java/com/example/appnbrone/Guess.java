@@ -1,28 +1,50 @@
 package com.example.appnbrone;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.ImageButton;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.Random;
 
 
 public class Guess extends AppCompatActivity {
+
+    private static final String KEY_HS = "HighScore";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guess);
 
+        findViewById(R.id.gameView).setVisibility(View.INVISIBLE);
 
+
+// Luodaan satunnaisluku, joka määrittää mihin dino piiloutuu
         Random rand = new Random();
         int rand_int1 = rand.nextInt(4);
+
+        //pelin parastulos laiteen sisäisessä muistissa:
+
+        final int score;
+        SharedPreferences myPreferences
+                = PreferenceManager.getDefaultSharedPreferences(Guess.this);
+        SharedPreferences.Editor myEditor = myPreferences.edit();
+        myEditor.putInt("KEY_HS",0);
+        myEditor.commit();
+        int highScore = myPreferences.getInt("KEY_HS", 0);
+
+
+// Animaatio, kun korttia käännetään
         Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.roundanimation);
+
+       // määritetään korttien klikki-ominaisuudet
         final ImageButton button0 = findViewById(R.id.imageButton);
         button0.setOnClickListener(new View.OnClickListener() {
                                       public void onClick(View v) {
@@ -32,6 +54,9 @@ public class Guess extends AppCompatActivity {
                                           button0.setImageResource(R.mipmap.ic_launcher_round);
                                           button0.setBackgroundColor(Color.WHITE);
                                           button0.setVisibility(View.VISIBLE);}
+                                          else {
+                                              findViewById(R.id.gameView).setVisibility(View.VISIBLE);
+                                          }
                                       }
                                   }
         );
@@ -44,6 +69,7 @@ public class Guess extends AppCompatActivity {
                                           button1.setImageResource(R.mipmap.ic_launcher_round);
                                           button1.setBackgroundColor(Color.WHITE);
                                           button1.setVisibility(View.VISIBLE);}
+
                                       }
                                   }
         ); final ImageButton button2 = findViewById(R.id.imageButton3);
@@ -79,12 +105,5 @@ public class Guess extends AppCompatActivity {
     }
 
 
-    public static void main(String args[])
-    {
-        // create instance of Random class
-        Random rand = new Random();
 
-        // Generate random integers in range 0 to 3
-        int rand_int1 = rand.nextInt(4);
-    }
 }

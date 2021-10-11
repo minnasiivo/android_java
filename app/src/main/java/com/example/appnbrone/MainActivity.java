@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-        public void sartGuess(View view) {
+        public void startGuess(View view) {
             Intent intent = new Intent(this, Guess.class);
             startActivity(intent);
         }
