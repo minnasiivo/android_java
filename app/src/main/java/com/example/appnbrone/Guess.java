@@ -26,7 +26,7 @@ public class Guess extends AppCompatActivity {
         findViewById(R.id.gameView).setVisibility(View.INVISIBLE);
 
 
-// Luodaan satunnaisluku, joka määrittää mihin dino piiloutuu
+// Luodaan satunnaisluku, joka määrittää mihin dinosaurus piiloutuu
         Random rand = new Random();
         int rand_int1 = rand.nextInt(4);
 
