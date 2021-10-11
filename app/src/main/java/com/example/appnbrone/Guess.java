@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,8 +16,11 @@ import java.util.Random;
 
 
 public class Guess extends AppCompatActivity {
+    int score;
+    int highestScore;
+    private static final String KEY_HS = "HighScore: ";
+    private static final String MY_SCORE = "Score";
 
-    private static final String KEY_HS = "HighScore";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,14 +35,22 @@ public class Guess extends AppCompatActivity {
         int rand_int1 = rand.nextInt(4);
 
         //pelin parastulos laiteen sisäisessä muistissa:
-
-        final int score;
         SharedPreferences myPreferences
                 = PreferenceManager.getDefaultSharedPreferences(Guess.this);
-        SharedPreferences.Editor myEditor = myPreferences.edit();
-        myEditor.putInt("KEY_HS",0);
-        myEditor.commit();
-        int highScore = myPreferences.getInt("KEY_HS", 0);
+
+        highestScore = myPreferences.getInt("KEY_HS", 0);
+        score = myPreferences.getInt("MY_SCORE", 0);
+
+        TextView scoreText = findViewById(R.id.myScore);
+        TextView highScoreText = findViewById(R.id.highScore);
+
+        highScoreText.setText(KEY_HS + String.valueOf(highestScore));
+        scoreText.setText("score: " + String.valueOf(score));
+
+
+
+
+
 
 
 // Animaatio, kun korttia käännetään
@@ -50,13 +62,20 @@ public class Guess extends AppCompatActivity {
                                       public void onClick(View v) {
                                           button0.startAnimation(animation);
                                           button0.setVisibility(View.GONE);
-                                          if(rand_int1 ==0){
-                                          button0.setImageResource(R.mipmap.ic_launcher_round);
-                                          button0.setBackgroundColor(Color.WHITE);
-                                          button0.setVisibility(View.VISIBLE);}
+                                          if(rand_int1 ==0) {
+                                              button0.setImageResource(R.mipmap.ic_launcher_round);
+                                              button0.setBackgroundColor(Color.WHITE);
+                                              button0.setVisibility(View.VISIBLE);
+                                              score++;
+                                              scoreText.setText("score: " + String.valueOf(score));
+                                          }
                                           else {
                                               findViewById(R.id.gameView).setVisibility(View.VISIBLE);
+                                              score = 0;
                                           }
+                                          if(score>highestScore)
+                                          {highestScore = score;
+                                              highScoreText.setText(KEY_HS + String.valueOf(highestScore));}
                                       }
                                   }
         );
@@ -100,6 +119,17 @@ public class Guess extends AppCompatActivity {
 
     public void refresh(View view)
     {
+
+        SharedPreferences myPreferences
+                = PreferenceManager.getDefaultSharedPreferences(Guess.this);
+        SharedPreferences.Editor editor = myPreferences.edit();
+        editor.putInt("KEY_HS",highestScore);
+        editor.apply();
+
+        editor.putInt("MY_SCORE", score);
+        editor.apply();
+
+
         finish();
         startActivity(getIntent());
     }
