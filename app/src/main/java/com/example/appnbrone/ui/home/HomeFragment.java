@@ -49,6 +49,8 @@ public class HomeFragment extends Fragment {
         View root = binding.getRoot();
 
 
+
+
         homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
