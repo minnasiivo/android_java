@@ -13,11 +13,20 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MyActivity";
     private TextView helloView;
+    //AirplanemodeReceiver airplanemodeReceiver = new AirplanemodeReceiver();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Log.i(TAG, "main activity käynnistyy");
+        //IntentFilter filter = new IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED);
+        //registerReceiver(airplanemodeReceiver, filter);
+
+
+
 
 
         Log.e(TAG, "MainActivity onCreate()-method");
@@ -41,8 +50,22 @@ public class MainActivity extends AppCompatActivity {
         public void startGuess(View view) {
             Intent intent = new Intent(this, Guess.class);
             startActivity(intent);
+
+
         }
 
 
 
+    @Override
+    protected void onStart() {
+
+
+        super.onStart();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //unregisterReceiver(airplanemodeReceiver);
+    }
 }
