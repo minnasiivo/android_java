@@ -39,6 +39,7 @@ public class DashboardFragment extends Fragment {
     private static final String TAG = "MyActivity";
     private static final int PERMISSION_CODE = 100;
     String currentLocation;
+    Location lastLocation;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -92,7 +93,7 @@ public class DashboardFragment extends Fragment {
         Log.d(TAG, "TÄTÄ EI ILMEISESTI KOSKAAN TULOSTETA!?!?");
 
 
-        Location lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
         double latitude = lastLocation.getLatitude();
         double longitude = lastLocation.getLongitude();
@@ -111,7 +112,7 @@ public class DashboardFragment extends Fragment {
 
         TextView latitudeText = binding.textView5;
         TextView longitudeText = binding.textView6;
-        Log.d(TAG, ".............. Jälleen yksi loki testaus  NYT GPS:STÄ SAADUT TIEDOT KÄYTÖSSÄ.......");
+        Log.d(TAG, ".............. SAADUT SIJAINTITIEDOT KÄYTÖSSÄ.......");
         TextView addressText = binding.textView7;
         addressText.setText(currentLocation);
 
@@ -156,29 +157,8 @@ public class DashboardFragment extends Fragment {
             return;
         }
         Location newLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-        double latitude =newLocation.getLatitude();
-        double longitude = newLocation.getLongitude();
-        try {
-            Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
-            List<Address> addresses = geocoder.getFromLocation(
-                    latitude,
-                    longitude,
-                    1);
-            Address address= addresses.get(0);
-            currentLocation = address.getAddressLine(0);
-
-        } catch (Exception e) {
-            Log.e(getTag(), e.getMessage());
-        }
-
-        TextView latitudeText = binding.textView5;
-        TextView longitudeText = binding.textView6;
-        TextView addressText = binding.textView7;
-        addressText.setText(currentLocation);
-
-        latitudeText.setText("Latitude: " + latitude );
-        longitudeText.setText("Longitude: " + longitude );
+        lastLocation = newLocation;
+        Log.d(TAG, ".............. YRITETÄÄN PÄIVITTÄÄ SIJAINTITIETO.......");
     }
 
 /*

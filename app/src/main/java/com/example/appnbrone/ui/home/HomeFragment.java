@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.appnbrone.AirplanemodeReceiver;
 import com.example.appnbrone.Guess;
+import com.example.appnbrone.companies.Companies;
 import com.example.appnbrone.databinding.FragmentHomeBinding;
 
 public class HomeFragment extends Fragment {
@@ -57,6 +58,21 @@ public class HomeFragment extends Fragment {
 
             }
         });
+
+
+
+
+        final Button searchButton = binding.searchBtn;
+        searchButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+               String searchValue = binding.editText.getText().toString();
+                Intent intent = new Intent(view.getContext(), Companies.class);
+                intent.putExtra("Value1",searchValue);
+                view.getContext().startActivity(intent);
+            }
+        });
+
     }
 
 

@@ -11,4 +11,7 @@
     <string name="score">High score</string>
     <string name="myscore">Score</string>
     <string name="gameTextView">Try again</string>
+    <string name="button1">START</string>
+    <string name="button2">PAUSE</string>
+    <string name="button3">STOP</string>
 </resources>
