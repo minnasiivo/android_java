@@ -16,7 +16,8 @@
         android:theme="@style/Theme.AppNbrOne" >
         <activity
             android:name=".companies.Companies"
-            android:exported="true" />
+            android:exported="true"
+            android:parentActivityName=".MainActivity" />
 
 
         <receiver
@@ -38,6 +39,7 @@
             android:name=".Guess"
             android:exported="true"
             android:parentActivityName=".MainActivity" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true" />

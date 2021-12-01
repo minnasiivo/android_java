@@ -22,13 +22,9 @@ import com.example.appnbrone.databinding.FragmentHomeBinding;
 
 public class HomeFragment extends Fragment {
 
-
-    AirplanemodeReceiver airplanemodeReceiver = new AirplanemodeReceiver();
-
     private HomeViewModel homeViewModel;
     private FragmentHomeBinding binding;
-
-
+    AirplanemodeReceiver airplanemodeReceiver = new AirplanemodeReceiver();
 
     @Override
     public void onStart() {
@@ -44,11 +40,24 @@ public class HomeFragment extends Fragment {
                     v.getContext().startActivity(intent);
     }});
 
+
+
+        final Button searchButton = binding.searchBtn;
+        searchButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                String searchValue = binding.editText.getText().toString();
+                Intent intent2 = new Intent(view.getContext(), Companies.class);
+                intent2.putExtra("Value1", searchValue);
+                view.getContext().startActivity(intent2);
+            }});
+
+
         final Button button2 = binding.myButton;
         button2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 button2.setText("uusi teksti");
-               TextView helloView = binding.myTextView;
+                TextView helloView = binding.myTextView;
                 if(helloView.getVisibility()==View.INVISIBLE){
                     helloView.setVisibility(View.VISIBLE);}
                 else{
@@ -59,19 +68,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
-
-
-        final Button searchButton = binding.searchBtn;
-        searchButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-               String searchValue = binding.editText.getText().toString();
-                Intent intent = new Intent(view.getContext(), Companies.class);
-                intent.putExtra("Value1",searchValue);
-                view.getContext().startActivity(intent);
-            }
-        });
 
     }
 

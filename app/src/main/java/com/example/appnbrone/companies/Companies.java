@@ -18,29 +18,34 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Companies extends AppCompatActivity {
     private static final String TAG = "MyActivity";
     String searchValue;
     String urlStart;
     String urlEnd;
-    String url;
-    JSONObject response;
+    String myUrl;
+    //JSONObject response;
     JSONArray results;
-    TextView textView = findViewById(R.id.textView2);
+    TextView textView;
+    List<String> companyList;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_companies);
-        Log.d(TAG, "!!!!!!!!!!!!!!!!_________testataan_____!!!!!!!!!!!!!!!!!!!!!!!!!!!" );
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
-        urlStart = "http://avoindata.prh.fi/bis/v1?totalResults=false&maxResults=75&resultsFrom=0&name=";
+        textView = findViewById(R.id.textView2);
+        urlStart = "http://avoindata.prh.fi/bis/v1?totalResults=false&maxResults=50&resultsFrom=0&name=";
         urlEnd ="&companyRegistrationFrom=2000-02-28";
 
         Bundle extras = getIntent().getExtras();
@@ -51,68 +56,131 @@ public class Companies extends AppCompatActivity {
         if(Value1 != null){
             searchValue=Value1;
             Log.d(TAG, "Testi: " + searchValue);
-            url = urlStart + searchValue + urlEnd;
-            Log.d(TAG, "Haussa käytettävä url: " + url);
+            myUrl = urlStart + searchValue + urlEnd;
+            Log.d(TAG, "Haussa käytettävä url: " + myUrl);
         }
         handleRequest();
+
+
     }
+
+
 
     void handleRequest(){
 
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
+
         Log.d(TAG, "_________testi_____" );
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>(){
-            @Override
-            public void onResponse(JSONObject response) {
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
 
-                accessingJson(response);
-                Log.d(TAG, "_________testi_____2" );
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.GET,
+                myUrl,
+                null,
+                new Response.Listener<JSONObject>(){
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d(TAG, "heissulivei");
+                        Log.d(TAG, response.toString());
+                        //accessingJsonArray(response);
+                        //accessingJson(response);
 
-            }
-        }, new Response.ErrorListener() {
+                        try{
+                        JSONArray results= null;
 
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("error",error.toString());
-            }
+                            results = response.getJSONArray("results");
+                            Log.d(TAG, results.toString());
+                            List<String> allNames = new ArrayList<String>();
+                            companyList = new ArrayList<String>();
 
-        });
-        //requestQueue.add(request);
+                            for(int i=0; i<results.length(); i++){
+                                JSONObject companies = null;
+                                companies = results.getJSONObject(i);
+                                String name = null;
+                                name = companies.getString("name");
+                                String bID= companies.getString("businessId");
+                                allNames.add(name);
+                                companyList.add(bID);
+                                Log.d("name",allNames.get(i));
+                                textView.setText("NAME: "+ allNames.get(i)+" ID: "+companyList.get(i));
+
+                            }
+
+                        }catch (JSONException e) {
+                            e.printStackTrace();
+
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("error",error.toString());
+                        Log.d(TAG, " virheen etsintää..." );
+                        return;
+                    }
+
+                });
+        requestQueue.add(request);
 
     }
+/*
+    List<String> allNames = new ArrayList<String>();
 
-    public void accessingJson(JSONObject json) {
-        Log.d(TAG, "_________testi_____3" );
-        try {
-            Object invalid = json.get("invalid"); // throws JSONException - "invalid" entry doesn't exists
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    JSONArray cast = jsonResponse.getJSONArray("abridged_cast");
+for (int i=0; i<cast.length(); i++) {
+        JSONObject actor = cast.getJSONObject(i);
+        String name = actor.getString("name");
+        allNames.add(name);
+    }*/
 
-        int age = json.optInt("age", 42); // using default value instead of throwing exception
-        JSONArray pets = null;
-        try {
-            results = json.getJSONArray("results");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    private void accessingJsonArray(JSONArray response) {
+
+    try{
+        JSONObject nameObj = null;
+         nameObj = response.getJSONObject(0);
+        Log.d("TAG", nameObj.getString("type"));
+
+        results = nameObj.getJSONArray("results");
+
         for (int i = 0; i < results.length(); i++) {
             JSONObject companies = null;
-            try {
                 companies = results.getJSONObject(i);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+
             String name = null;
-            try {
                 name = companies.getString("name");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            Log.d("name",name);
             textView.setText(name);
         }
-    }
+
+    }catch (JSONException e) {
+        e.printStackTrace();
+    }}
+
+
+    public void accessingJson(JSONObject response) {
+        Log.d(TAG, "_________testi_____3" );
+
+        JSONArray results= null;
+        try{
+        results = response.getJSONArray("results");
+        for(int i=0; i<results.length(); i++){
+            JSONObject companies = null;
+            companies = results.getJSONObject(i);
+            String name = null;
+            name = companies.getString("name");
+            Log.d("name",name);
+            textView.setText(name);
+
+        }
+
+        }catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+}
 
 /*
     public void accessingJson(JSONObject json) {
@@ -148,4 +216,3 @@ public class Companies extends AppCompatActivity {
     }
     */
 
-}
