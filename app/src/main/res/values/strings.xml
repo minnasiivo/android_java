@@ -4,9 +4,9 @@
     <string name="my_textView">Hello World!</string>
     <string name="play_button">PLAY</string>
     <string name="title_activity_bottom_navigation">BottomNavigation</string>
-    <string name="title_home">Game</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_home">HOME</string>
+    <string name="title_dashboard">MY MAPS</string>
+    <string name="title_notifications">Timer</string>
     <string name="Game_header">Let\'s Play</string>
     <string name="score">High score</string>
     <string name="myscore">Score</string>
@@ -14,4 +14,9 @@
     <string name="button1">START</string>
     <string name="button2">PAUSE</string>
     <string name="button3">STOP</string>
+    <string name="home">Home</string>
+    <string name="item_name">Item_name</string>
+    <string name="item_position">item_position</string>
+    <string name="mapButton">Show on the map</string>
+    <string name="search">Find Company</string>
 </resources>

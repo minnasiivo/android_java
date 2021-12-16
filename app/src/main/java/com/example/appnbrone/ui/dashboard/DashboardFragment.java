@@ -1,5 +1,7 @@
 package com.example.appnbrone.ui.dashboard;
 
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
@@ -20,6 +22,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
@@ -40,6 +43,18 @@ public class DashboardFragment extends Fragment {
     private static final int PERMISSION_CODE = 100;
     String currentLocation;
     Location lastLocation;
+    double latitude;
+    double longitude;
+    LocationManager locationManager;
+    LocationListener locationListener;
+    ActivityResultLauncher<String> activityResultLauncher;
+
+
+    private int requestCode;
+    private String[] permissions;
+    private int[] grantResults;
+
+
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -51,7 +66,80 @@ public class DashboardFragment extends Fragment {
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        LocationListener locationListener = new LocationListener() {
+        binding.buttonPermission.setVisibility(View.INVISIBLE);
+        binding.textPermission.setVisibility(View.INVISIBLE);
+        binding.textView5.setText("");
+        binding.textView6.setText("");
+        binding.textView7.setText("");
+
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            checkPermissions();
+        } else {
+            Toast.makeText(getContext(), "Permission already granted", Toast.LENGTH_SHORT).show();
+            gpsAccessGranted();
+        }
+
+
+
+        binding.buttonPermission.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v){
+                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                        && ContextCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+                    checkPermissions();
+                }else{
+
+                    gpsAccessGranted();
+                }
+
+            }});
+
+
+        return root;
+
+
+    }
+
+
+    public void checkPermissions() {
+        Log.d(TAG, "Sijaintitietolupaa ei ole: KYSYTÄÄN LUPA!");
+        String[] permissions = new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION};
+        ActivityCompat.requestPermissions(getActivity(), permissions, PERMISSION_CODE);
+        //onRequestPermissionsResult(PERMISSION_CODE,permissions,int[]);
+        checkUserAnswer();}
+
+        public void checkUserAnswer(){
+
+        if (ActivityCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(getContext(), "permission granted", Toast.LENGTH_SHORT).show();
+            gpsAccessGranted();
+        } else {
+            Toast.makeText(getContext(), "No permission", Toast.LENGTH_SHORT).show();
+            binding.textPermission.setVisibility(View.VISIBLE);
+            binding.buttonPermission.setVisibility(View.VISIBLE);
+            checkUserAnswer();
+        }
+
+
+    }
+
+
+
+
+
+
+
+    public void gpsAccessGranted() {
+
+        binding.buttonPermission.setVisibility(View.INVISIBLE);
+        binding.textPermission.setVisibility(View.INVISIBLE);
+
+
+
+
+        locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
                 makeUseOfNewLocation(location);
@@ -73,52 +161,53 @@ public class DashboardFragment extends Fragment {
             }
         };
 
-        LocationManager locationManager =
-                (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.d(TAG, "Sijaintitietolupaa ei ole: KYSYTÄÄN LUPA!");
-            String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
-            ActivityCompat.requestPermissions(getActivity(), permissions, PERMISSION_CODE);
-            Log.d(TAG, "SOS!!!!  2");
-            return root;
-
-        }
-        Toast.makeText(getContext(), "Permission already granted", Toast.LENGTH_SHORT).show();
         Log.d(TAG, "SOS!!!!  3");
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            checkPermissions();
+        }
+
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 10, locationListener);
-
-
-        Log.d(TAG, "TÄTÄ EI ILMEISESTI KOSKAAN TULOSTETA!?!?");
-
 
         lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
-        double latitude = lastLocation.getLatitude();
-        double longitude = lastLocation.getLongitude();
-        try {
-            Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
-            List<Address> addresses = geocoder.getFromLocation(
-                    latitude,
-                    longitude,
-                    1);
-            Address address = addresses.get(0);
-            currentLocation = address.getAddressLine(0);
 
-        } catch (Exception e) {
-            Log.e(getTag(), e.getMessage());
+        Log.d(TAG, ".............. 'tässä kohtaako kaatuu sovellus tällä kertaa!?'.......");
+
+        if(lastLocation != null) {
+            latitude = lastLocation.getLatitude();
+            longitude = lastLocation.getLongitude();
+            try {
+                Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+                List<Address> addresses = geocoder.getFromLocation(
+                        latitude,
+                        longitude,
+                        1);
+                Address address = addresses.get(0);
+                currentLocation = address.getAddressLine(0);
+
+            } catch (Exception e) {
+                Log.e(getTag(), e.getMessage());
+            }
+
+            TextView latitudeText = binding.textView5;
+            TextView longitudeText = binding.textView6;
+            Log.d(TAG, ".............. SAADUT SIJAINTITIEDOT KÄYTÖSSÄ.......");
+            TextView addressText = binding.textView7;
+            addressText.setText(currentLocation);
+
+            latitudeText.setText("Latitude: " + latitude);
+            longitudeText.setText("Longitude: " + longitude);
+
         }
-
-        TextView latitudeText = binding.textView5;
-        TextView longitudeText = binding.textView6;
-        Log.d(TAG, ".............. SAADUT SIJAINTITIEDOT KÄYTÖSSÄ.......");
-        TextView addressText = binding.textView7;
-        addressText.setText(currentLocation);
-
-        latitudeText.setText("Latitude: " + latitude);
-        longitudeText.setText("Longitude: " + longitude);
-
 
         final Button mapButton = binding.button2;
         mapButton.setOnClickListener(new View.OnClickListener() {
@@ -137,10 +226,23 @@ public class DashboardFragment extends Fragment {
         });
 
 
-        return root;
-
+        return;
 
     }
+
+
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+// villejä testauksia osa yksi :D
+
+
+        }
+
+
+
 
     private void makeUseOfNewLocation(Location location) {
         LocationManager locationManager =
@@ -159,88 +261,15 @@ public class DashboardFragment extends Fragment {
         Location newLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         lastLocation = newLocation;
         Log.d(TAG, ".............. YRITETÄÄN PÄIVITTÄÄ SIJAINTITIETO.......");
+        gpsAccessGranted();
     }
 
-/*
-   // @RequiresApi(api = Build.VERSION_CODES.N)
-    @Override
-    public void onStart() {
-        super.onStart();
-        String latitude;
-        String longitude;
 
-        LocationManager locationManager =
-                (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        Location lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, (LocationListener) this);
-        lastLocation.getLatitude();
-        lastLocation.getLongitude();
-        TextView latitudeText = binding.textView5;
-        TextView longitudeText = binding.textView6;
-
-        TextView addressText = binding.textView7;
-
-        addressText.setText("NOTTA PERKELE");
-        latitudeText.setText("Latitude: " + lastLocation.getLatitude());
-        longitudeText.setText("Longitude: " + lastLocation.getLongitude());
-
-
-
-        LocationListener locationListener = new LocationListener() {
-            public void onLocationChanged(Location location) {
-                //makeUseOfNewLocation(Location);
-                try {
-                    Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
-                    List<Address> addresses = geocoder.getFromLocation(
-                            location.getLatitude(),
-                            location.getLongitude(),
-                            1);
-
-                } catch (Exception e) {
-                    Log.e(getTag(), e.getMessage());
-                }
-
-
-
-            }
-
-
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-            }
-
-
-            public void onProviderEnabled(@NonNull String provider) {
-            }
-
-            public void onProviderDisabled(@NonNull String provider) {
-            }
-        };
-
-
-
-
-
-
-
-    }
-
-*/
 
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+
         binding = null;}
 }

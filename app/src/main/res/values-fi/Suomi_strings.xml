@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Meitsin äppi</string>
+    <string name="button">HEIPPA RALLAA!</string>
+    <string name="my_textView">Moi maailma!</string>
+    <string name="play_button">PELAA</string>
+    <string name="title_activity_bottom_navigation">BottomNavigation</string>
+    <string name="title_home">KOTI</string>
+    <string name="title_dashboard">Karttani</string>
+    <string name="title_notifications">Ajastin</string>
+    <string name="Game_header">Pelataan</string>
+    <string name="score">Ennätys</string>
+    <string name="myscore">Pisteet</string>
+    <string name="gameTextView">Yritä uudelleen</string>
+    <string name="button1">START</string>
+    <string name="button2">PAUSE</string>
+    <string name="button3">STOP</string>
+    <string name="home">Home</string>
+</resources>

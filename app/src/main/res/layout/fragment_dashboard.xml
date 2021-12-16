@@ -38,6 +38,24 @@
             android:id="@+id/button2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Button" />
+            android:text="@string/mapButton" />
+
+        <TextView
+            android:id="@+id/textPermission"
+            android:layout_width="match_parent"
+            android:layout_height="131dp"
+            android:layout_marginTop="15dp"
+            android:text="Maps can't function properly without gps access"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textFontWeight="@integer/material_motion_duration_medium_2"
+            android:textSize="14dp" />
+
+        <Button
+            android:id="@+id/buttonPermission"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:text="grant permission" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

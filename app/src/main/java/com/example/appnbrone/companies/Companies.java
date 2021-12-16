@@ -2,9 +2,15 @@ package com.example.appnbrone.companies;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -30,16 +36,43 @@ public class Companies extends AppCompatActivity {
     //JSONObject response;
     JSONArray results;
     TextView textView;
+    List<String> allNames;
     List<String> companyList;
+    List<String> regDateList;
+    List<String> companyFormList;
+
+    private RecyclerView mRecyclerView;
+    private RecycleAdapter mAdapter;
+    private List<Detail> mList = new ArrayList<>();
 
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_companies);
 
+        mRecyclerView = (RecyclerView) findViewById(R.id.cardList);
+        mRecyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 5));
+        mAdapter = new RecycleAdapter(getApplicationContext(), mList);
+        mRecyclerView.setAdapter(mAdapter);
+
     }
+
+    /**
+     * Called when a grid item is clicked
+     *
+     * @param input The value of the grid item which is displayed by position
+     */
+    private void makeToast(String input) {
+        Toast.makeText(this, input, Toast.LENGTH_SHORT).show();
+        }
+
+
 
     @Override
     protected void onStart() {
@@ -90,8 +123,11 @@ public class Companies extends AppCompatActivity {
 
                             results = response.getJSONArray("results");
                             Log.d(TAG, results.toString());
-                            List<String> allNames = new ArrayList<String>();
+                            allNames = new ArrayList<String>();
                             companyList = new ArrayList<String>();
+                            companyFormList = new ArrayList<String>();
+                            regDateList = new ArrayList<String>();
+
 
                             for(int i=0; i<results.length(); i++){
                                 JSONObject companies = null;
@@ -99,12 +135,35 @@ public class Companies extends AppCompatActivity {
                                 String name = null;
                                 name = companies.getString("name");
                                 String bID= companies.getString("businessId");
+                                String form = companies.getString("companyForm");
+                                String regDate = companies.getString("registrationDate");
                                 allNames.add(name);
                                 companyList.add(bID);
-                                Log.d("name",allNames.get(i));
-                                textView.setText("NAME: "+ allNames.get(i)+" ID: "+companyList.get(i));
+                                companyFormList.add(form);
+                                regDateList.add(regDate);
+
+                                Log.d("name",allNames.get(i) );
+                                Log.d("ID:", companyList.get(i));
+                                Log.d("CompanyForm:", companyFormList.get(i));
+                                Log.d("RegistrationDate:", regDateList.get(i));
+                                textView.setText("NAME: "+ allNames.get(i)+" ID: "+companyList.get(i) + companyFormList.get(i) + regDateList.get(i));
+
+                                mList.add(new Detail("name","bID","form","regDate",i));
 
                             }
+
+
+
+                            // Tässä tehdään listaus rajapinnasta haetusta tiedosta välitettäväksi adapterille..
+
+
+                            mAdapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                    makeToast("" + mList.get(position).getPosition());
+                                }
+                            });
+
 
                         }catch (JSONException e) {
                             e.printStackTrace();

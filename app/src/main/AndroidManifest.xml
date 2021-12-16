@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.appnbrone" >
+    package="com.example.appnbrone">
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -8,17 +8,16 @@
 
     <application
         android:allowBackup="true"
-        android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppNbrOne" >
+        android:theme="@style/Theme.AppNbrOne"
+        android:usesCleartextTraffic="true">
         <activity
             android:name=".companies.Companies"
             android:exported="true"
             android:parentActivityName=".MainActivity" />
-
 
         <receiver
             android:name=".AirplanemodeReceiver"
@@ -28,7 +27,7 @@
         <activity
             android:name=".BottomNavigation"
             android:exported="true"
-            android:label="@string/title_activity_bottom_navigation" >
+            android:label="@string/title_activity_bottom_navigation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -39,7 +38,6 @@
             android:name=".Guess"
             android:exported="true"
             android:parentActivityName=".MainActivity" />
-
         <activity
             android:name=".MainActivity"
             android:exported="true" />

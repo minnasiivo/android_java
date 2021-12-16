@@ -21,7 +21,7 @@
         android:layout_width="194dp"
         android:layout_height="83dp"
         android:inputType="text"
-        android:text="search companies"
+        android:hint="search companies"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.235"
@@ -69,8 +69,8 @@
         android:text="@string/play_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.486"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/myButton"
-        app:layout_constraintVertical_bias="0.305" />
+        app:layout_constraintVertical_bias="0.088" />
 </androidx.constraintlayout.widget.ConstraintLayout>

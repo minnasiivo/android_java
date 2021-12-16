@@ -24,6 +24,7 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+
     }
     buildFeatures {
         viewBinding true
@@ -47,5 +48,7 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.2.0'
     implementation 'androidx.recyclerview:recyclerview-selection:1.1.0-rc03'
     implementation 'com.loopj.android:android-async-http:1.4.9'
+    implementation "androidx.cardview:cardview:1.0.0"
+
 
 }
